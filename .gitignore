@@ -1,8 +1,19 @@
 # Compiled Object files
+
+/Debug/*
 *.slo
 *.lo
-*.o
 *.obj
+*.sdf
+*.sln
+*.suo
+*.dsp
+*.dsw
+*.ncb
+*.opt
+*.plg
+*.vcxproj
+*.filters
 
 # Precompiled Headers
 *.gch
