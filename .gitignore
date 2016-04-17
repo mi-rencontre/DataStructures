@@ -1,9 +1,8 @@
 # Compiled Object files
-
 .Debug/*
 *.slo
 *.lo
-*.obj
+*.ob
 *.sdf
 *.sln
 *.suo
@@ -39,3 +38,7 @@
 *.app
 *.ilk
 *.pdb
+*.txt
+*.compress
+*.config
+*.uncompress
