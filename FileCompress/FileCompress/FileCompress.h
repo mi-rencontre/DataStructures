@@ -4,9 +4,7 @@
 #include<algorithm>
 #include<windows.h>
 
-
 typedef long long LongType;
-
 
 struct FileInfo
 {
@@ -64,7 +62,7 @@ public:
 
 		while (ch != EOF)
 		{
-			_infos[ch]._count++;
+			_infos[(unsigned char)ch]._count++;
 			ch = fgetc(fOut);
 			Charcount++;
 		}		
@@ -75,7 +73,7 @@ public:
 		//3.压缩文件
 		string compressFile = filename;
 		compressFile += ".compress";
-		FILE* fwCompress = fopen(compressFile.c_str(), "w");
+		FILE* fwCompress = fopen(compressFile.c_str(), "wb");
 		assert(fwCompress);
 
 		fseek(fOut, 0, SEEK_SET);
@@ -111,7 +109,7 @@ public:
 		//4.配置文件，方便后续的解压缩
 		string configFile = filename;
 		configFile += ".config";
-		FILE *fconfig = fopen(configFile.c_str(), "w");
+		FILE *fconfig = fopen(configFile.c_str(), "wb");
 		assert(fconfig);
 
 		char CountStr[128];
@@ -157,7 +155,7 @@ public:
 		Charcount += atoi(line.c_str());
 		line.clear();
 
-		while (1)
+		while (feof(outConfig))
 		{
 			line = ReadLine(outConfig);
 			if (!line.empty())
@@ -168,7 +166,7 @@ public:
 			}
 			else
 			{
-				break;
+				line = '\n';
 			}
 		}
 
@@ -180,7 +178,7 @@ public:
 
 		string	UnCompressFile = filename;
 		UnCompressFile += ".uncompress";
-		FILE* fOut = fopen(UnCompressFile.c_str(), "w");
+		FILE* fOut = fopen(UnCompressFile.c_str(), "wb");
 
 		string CompressFile = filename;
 		CompressFile += ".compress";
