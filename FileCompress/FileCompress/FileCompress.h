@@ -188,10 +188,10 @@ public:
 		HuffmanTreeNode<FileInfo>* cur = root;
 		ch = fgetc(fIn);
 
-		while (ch != EOF)
+		while ((unsigned char)ch != EOF)
 		{
 			--pos;
-			if (ch &(1 << pos))
+			if ((unsigned char)ch &(1 << pos))
 			{
 				cur = cur->_right;
 			}
@@ -288,6 +288,7 @@ private:
 
 void TestFileCompress()
 {
+
 	FileCompress<FileInfo> fc;
 
 	int begin1 = GetTickCount();
@@ -299,5 +300,6 @@ void TestFileCompress()
 	fc.UnCompresss("test.txt");
 	int end2 = GetTickCount();
 	cout << end2 - begin2 << endl;
+
 }
 
