@@ -263,30 +263,25 @@ protected:
 		}
 		stack<BinaryTreeNode<T>*> s;
 		BinaryTreeNode<T> *cur = root;
-		BinaryTreeNode<T> *PreVisited = NULL;
-		while (cur)
+		BinaryTreeNode<T> *prevVisited = NULL;
+		while (cur || !s.empty())
 		{
-			s.push(cur);
-			cur = cur->_left;
-		}
-		while (!s.empty())
-		{
-			cur = s.top();
-			s.pop();
-			if (cur->_right == NULL || cur->_right == PreVisited)
+			while (cur)
 			{
-				cout << cur->_data << " ";
-				PreVisited = cur;
+				s.push(cur);
+				cur = cur->_left;
+			}
+			BinaryTreeNode<T>* top = s.top();
+
+			if (top->_right == NULL || top->_right == prevVisited)
+			{
+				cout << top->_data << " ";
+				prevVisited = top;
+				s.pop();
 			}
 			else
 			{
-				s.push(cur);
-				cur = cur->_right;
-				while (cur)
-				{
-					s.push(cur);
-					cur = cur->_left;
-				}
+				cur = top->_right;
 			}
 		}
 		cout << endl;
