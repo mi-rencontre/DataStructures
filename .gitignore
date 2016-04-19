@@ -1,5 +1,6 @@
 # Compiled Object files
-.Debug/*
+**/Debug
+**/Release
 *.slo
 *.lo
 *.ob
