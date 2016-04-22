@@ -139,24 +139,38 @@ public:
 
 		if (del->_left == NULL)
 		{
-			if (parent->_left == del)
+			if (del == _root)
 			{
-				parent->_left = del->_right;
+				_root = del->_right;
 			}
 			else
 			{
-				parent->_right = del->_right;
+				if (parent->_left == del)
+				{
+					parent->_left = del->_right;
+				}
+				else
+				{
+					parent->_right = del->_right;
+				}
 			}
 		}
 		else if (del->_right == NULL)
 		{
-			if (parent->_left == del)
+			if (del == _root)
 			{
-				parent->_left = del->_left;
+				_root = del->_left;
 			}
 			else
 			{
-				parent->_left = del->_left;
+				if (parent->_left == del)
+				{
+					parent->_left = del->_left;
+				}
+				else
+				{
+					parent->_right = del->_left;
+				}
 			}
 		}
 		else
@@ -302,10 +316,10 @@ int main()
 	}
 	bst.InOrder();
 	bst.Find(7);
-	for (int i = 0; i < 10; i++)
+	for (int i = 9; i >= 0; i--)
 	{
-		bst.Remove(a[i]);
+		bst.Remove(i);
+		bst.InOrder();
 	}
-	bst.InOrder();
 	return 0;
 }
