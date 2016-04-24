@@ -33,7 +33,7 @@ public:
 
 	~HuffmanTree()
 	{
-		Destory(_root);
+		_destroy(_root);
 	}
 
 	template <class T>
@@ -83,12 +83,12 @@ public:
 		return _root;
 	}
 
-	void Destory(Node* root)
+	void _destroy(Node* root)
 	{
 		if (root)
 		{
-			Destory(root->_left);
-			Destory(root->_right);
+			_destroy(root->_left);
+			_destroy(root->_right);
 			delete root;
 			root = NULL;
 		}
