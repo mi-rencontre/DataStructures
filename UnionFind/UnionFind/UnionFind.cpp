@@ -11,6 +11,14 @@ public:
 		memset(_array, -1, sizeof(int)*_size);
 	}
 
+	~UnionFindSet()
+	{
+		if (_array != NULL)
+		{
+			delete[] _array;
+		}
+	}
+
 	void Merge(int root1, int root2)
 	{
 		while (_array[root2] >= 0)
