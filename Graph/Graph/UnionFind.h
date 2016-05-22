@@ -7,7 +7,10 @@ public:
 		:_array(new int[size])
 		, _size(size)
 	{
-		memset(_array, -1, sizeof(int)*_size);
+		for (int i = 0; i < _size; i++)
+		{
+			_array[i] = -1;
+		}
 	}
 
 	~UnionFindSet()

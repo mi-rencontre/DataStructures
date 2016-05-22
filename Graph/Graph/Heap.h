@@ -213,7 +213,7 @@ void Test2()
 	cout<<endl;
 }
 
-void AdjustDown(int* a, size_t size, int root)
+void AdjustDown(int* a, int size, int root)
 {
 	int child = root*2+1;
 	while (child < size)
