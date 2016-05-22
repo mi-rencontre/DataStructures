@@ -65,13 +65,15 @@ void TestGraphLink2()
 	gl.Display();
 	gl.DFS(0);
 	gl.BFS(0);
+
+	gl.Dijkstra(0, 10000);
 }
 
 int main()
 {
 //	TestGraphMatrix1();
 //  TestGraphMatrix2();
-	TestGraphLink1();
-//	TestGraphLink2();
+//	TestGraphLink1();
+	TestGraphLink2();
 	return 0;
 }
