@@ -174,14 +174,15 @@ public:
 		int count = 1;
 		while (count < _vSize)
 		{
-			LinkEdge<V, W>* ret = _GetFirstEdge(src);
+			LinkEdge<V, W>* ret = _LinkTable[src]._head;
 			while (ret)
 			{
 				if (Visited[ret->_dstIndex] == false)
 				{
 					minHeap.Push(ret);
 				}
-				ret = _GetNextEdge(src, ret->_dstIndex);
+//				ret = _GetNextEdge(src, ret->_dstIndex);
+				ret = ret->_next;
 			}
 
 			if (minHeap.Empty())
@@ -223,6 +224,22 @@ public:
 		cout << endl;
 	}
 
+	void Dijkstra(int src, const W& maxValue)
+	{
+		W* dist = new W[_vSize];
+		int* path = new int[_vSize];
+		bool* vSet = new bool[_vSize];
+
+//		_Dijkstra(src, dist, path, vSet, _vSize, maxValue);
+		_Dijkstra_OP(src, dist, path, vSet, _vSize, maxValue);
+
+		_PrintPath(src, dist, path, _vSize);
+
+		delete[] dist;
+		delete[] path;
+		delete[] vSet;
+	}
+
 protected:
 	int GetVertexIndex(const V& vertex)
 	{
@@ -245,32 +262,31 @@ protected:
 		_LinkTable[srcIndex]._head = tmp;
 	}
 
-	LinkEdge<V, W>* _GetFirstEdge(int src)
-	{
-		return _LinkTable[src]._head;
-	}
+	//LinkEdge<V, W>* _GetFirstEdge(int src)
+	//{
+	//	return _LinkTable[src]._head;
+	//}
 
-	LinkEdge<V, W>* _GetNextEdge(int src, int next)
-	{
-		LinkEdge<V, W>* cur = _LinkTable[src]._head;
-		while (cur)
-		{
-			if (cur->_dstIndex == next)
-			{
-				return cur->_next;
-			}
-			cur = cur->_next;
-		}
-
-		return NULL;
-	}
+	//LinkEdge<V, W>* _GetNextEdge(int src, int next)
+	//{
+	//	LinkEdge<V, W>* cur = _LinkTable[src]._head;
+	//	while (cur)
+	//	{
+	//		if (cur->_dstIndex == next)
+	//		{
+	//			return cur->_next;
+	//		}
+	//		cur = cur->_next;
+	//	}
+	//	return NULL;
+	//}
 
 	void _DFS(int src, bool* Visited)
 	{
 		cout << _LinkTable[src]._vertex << "->";
 		Visited[src] = true;
 
-		LinkEdge<V, W>* cur = _GetFirstEdge(src);
+		LinkEdge<V, W>* cur = _LinkTable[src]._head;
 		while (cur)
 		{
 			if (Visited[cur->_dstIndex] == false)
@@ -278,7 +294,8 @@ protected:
 				_DFS(cur->_dstIndex, Visited);
 			}
 
-			cur = _GetNextEdge(src, cur->_dstIndex);
+//			cur = _GetNextEdge(src, cur->_dstIndex);
+			cur = cur->_next;
 		}
 	}
 
@@ -294,7 +311,7 @@ protected:
 			src = q.front();
 			q.pop();
 
-			LinkEdge<V, W>* cur = _GetFirstEdge(src);
+			LinkEdge<V, W>* cur = _LinkTable[src]._head;
 			while (cur)
 			{
 				if (Visited[cur->_dstIndex] == false)
@@ -303,7 +320,152 @@ protected:
 					Visited[cur->_dstIndex] = true;
 					q.push(cur->_dstIndex);
 				}
-				cur = _GetNextEdge(src ,cur->_dstIndex);
+//				cur = _GetNextEdge(src ,cur->_dstIndex);
+				cur = cur->_next;
+			}
+		}
+	}
+
+	W _GetWeight(int src, int dst, const W& maxValue)
+	{
+		if (src == dst)
+		{
+			return maxValue;
+		}
+		LinkEdge<V, W>* edge = _LinkTable[src]._head;
+		while (edge)
+		{
+			if (edge->_dstIndex == dst)
+			{
+				return edge->_w;
+			}
+			edge = edge->_next;
+		}
+		return maxValue;
+	}
+
+	void _Dijkstra_OP(int src, W* dist, int* path, bool* vSet,int size, const W& maxValue)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			dist[i] = _GetWeight(src, i, maxValue);
+			path[i] = src;
+			vSet[i] = false;
+		}
+
+		struct Compare
+		{
+			bool operator()(const pair<W, int>& l, const pair<W, int>& r)
+			{
+				return l.first < r.first;
+			}
+		};
+
+		Heap<pair<W, int>, Compare> minHeap;
+		for (int i = 0; i < size; ++i)
+		{
+			if (dist[i] < maxValue)
+			{
+				minHeap.Push(make_pair(dist[i], i));
+			}
+		}
+
+		vSet[src] = true;
+
+		int count = size;
+		while (count--)
+		{
+			if (minHeap.Empty())
+			{
+				continue;
+			}
+
+			int minIndex = minHeap.Top().second;
+			minHeap.Pop();
+
+			vSet[minIndex] = true;
+			for (int k = 0; k < size; k++)
+			{
+				W w = _GetWeight(minIndex, k, maxValue);
+				if (vSet[k] == false && dist[minIndex] + w < dist[k])
+				{
+					dist[k] = dist[minIndex] + w;
+					path[k] = minIndex;
+
+					minHeap.Push(make_pair(dist[k], k));
+				}
+			}
+		}
+	}
+
+	void _Dijkstra(int src, W* dist, int* path, bool* vSet, int size, const W& maxtValue)
+	{
+		//dist初始化src到其他顶点的距离
+		//path初始化src到其他顶点的路径
+		//初始化顶点集合
+		for (int i = 0; i < size; i++)
+		{
+			dist[i] = _GetWeight(src, i, maxtValue);
+			path[i] = src;
+			vSet[i] = false;
+		}
+
+		vSet[src] = true;
+		int count = size;
+		while (count--)
+		{
+			//选出与src顶点连接中最小的边
+			W min = maxtValue;
+			int minIndex = src;
+			for (int j = 0; j < size; j++)
+			{
+				if (vSet[j] == false && dist[j] < min)
+				{
+					minIndex = j;
+					min = dist[j];
+				}
+			}
+
+			vSet[minIndex] = true;
+			for (int k = 0; k < size; k++)
+			{
+				if (k == src)
+				{
+					continue;
+				}
+				W w = _GetWeight(minIndex, k, maxtValue);
+				if (vSet[k] == false && dist[minIndex] + w < dist[k])
+				{
+					dist[k] = dist[minIndex] + w;
+					path[k] = minIndex;
+				}
+			}
+		}
+	}
+
+	void _PrintPath(int src, W* dist, int* path, int size)
+	{
+		int* vPath = new int[size];
+		for (int i = 0; i < size; i++)
+		{
+			if (i != src)
+			{
+				int index = i;
+				int count = 0;
+				while (index != src)
+				{
+					vPath[count++] = index;
+					index = path[index];
+				}
+				vPath[count++] = src;
+//				cout << src << "," << i << "的路径为:";
+				cout << _LinkTable[src]._vertex << "," << _LinkTable[i]._vertex << "的路径为:";
+				while (count)
+				{
+					cout << _LinkTable[vPath[--count]]._vertex << "->";
+				//	cout << vPath[--count] << "->";
+				}
+				cout << "路径长度为:" << dist[i] << endl;
 			}
 		}
 	}
