@@ -167,7 +167,7 @@ int PartSort1(int *a, int left, int right)
 int PartSort2(int *a, int left, int right)
 {
 	assert(a);
-	int key = right;
+	int key = a[right];
 	int cur = left;
 	int prev = cur - 1;
 	while (cur < right)
@@ -179,7 +179,7 @@ int PartSort2(int *a, int left, int right)
 		++cur;
 	}
 	swap(a[++prev], a[right]);
-	return cur;
+	return prev;
 }
 
 //¿ìËÙÅÅÐò(µÝ¹é)
@@ -376,11 +376,11 @@ int main()
 //	SelectSort(a, 10);
 //	HeapSort(a, 10);
 //	BubbleSort(a, 10);
-//	QuickSort1(a, 0, 9);
+	QuickSort1(a, 0, 9);
 //	QuickSort2(a, 0, 9);
 //	MergeSort(a,10, 0, 9);
 //	CountSort(a, 10);
-	LSDSort(a, 10);
+//	LSDSort(a, 10);
 	Print(a, 10);
 	return 0;
 }
